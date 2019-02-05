@@ -3,6 +3,7 @@ package com.example.app.ws.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,12 +16,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.app.ws.api.UserRepository;
+import com.example.app.ws.exceptions.UserAlreadyExistsException;
 import com.example.app.ws.exceptions.UserServiceException;
 import com.example.app.ws.io.entity.UserEntity;
+import com.example.app.ws.security.SecurityConstants;
 import com.example.app.ws.service.UserService;
 import com.example.app.ws.shared.Utils;
+import com.example.app.ws.shared.dto.AddressDto;
 import com.example.app.ws.shared.dto.UserDto;
 import com.example.app.ws.ui.model.response.ErrorMessages;
+import com.example.app.ws.ui.model.response.UserRest;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -119,17 +124,26 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDto createUser(UserDto user) {
 
-		UserEntity userEntity = new UserEntity();
-		BeanUtils.copyProperties(user, userEntity);
+		if(this.userRepository.findByEmail(user.getEmail()) != null)
+			throw new UserAlreadyExistsException(ErrorMessages.RECORD_ALREADY_EXISTS.getErrorMessage());
+		
+		for(int i = 0; i < user.getAddresses().size(); i++) {
+			AddressDto address = user.getAddresses().get(i);
+			address.setUserDetails(user);
+			address.setAddressId(this.utils.generateAddressId(30));
+			user.getAddresses().set(i, address);
+		}
+		
+		ModelMapper modelMapper = new ModelMapper();
+		UserEntity userEntity = modelMapper.map(user, UserEntity.class);
+//		BeanUtils.copyProperties(user, userEntity);
 
 		String publicUserId = this.utils.generateUserId(30);
 		userEntity.setEncrypedPassword(this.bCryptPasswordEncoder.encode(user.getPassword()));
 		userEntity.setUserId(publicUserId);
 		UserEntity storedUserDetails = this.userRepository.save(userEntity);
-		UserDto returnValue = new UserDto();
-		BeanUtils.copyProperties(storedUserDetails, returnValue);
 
-		return returnValue;
+		return modelMapper.map(storedUserDetails, UserDto.class);
 	}
 
 	@Override

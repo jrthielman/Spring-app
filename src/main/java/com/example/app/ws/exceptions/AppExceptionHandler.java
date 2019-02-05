@@ -15,11 +15,19 @@ import com.example.app.ws.ui.model.response.ErrorMessage;
 public class AppExceptionHandler {
 	
 	@ExceptionHandler(value={UserServiceException.class})
-	public ResponseEntity<Object> handleUserSErviceException(UserServiceException ex, WebRequest request){
+	public ResponseEntity<Object> handleUserServiceException(UserServiceException ex, WebRequest request){
 		
 		ErrorMessage errorMessage = new ErrorMessage(new Date(), ex.getMessage());
 		
 		return new ResponseEntity<Object>(errorMessage, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@ExceptionHandler(value={UserAlreadyExistsException.class})
+	public ResponseEntity<Object> handleUserAlreadyExistsException(UserAlreadyExistsException ex, WebRequest request){
+		
+		ErrorMessage errorMessage = new ErrorMessage(new Date(), ex.getMessage());
+		
+		return new ResponseEntity<Object>(errorMessage, new HttpHeaders(), HttpStatus.CONFLICT);
 	}
 	
 	@ExceptionHandler(value={Exception.class})
