@@ -16,6 +16,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.example.app.ws.SpringApplicationContext;
+import com.example.app.ws.service.UserService;
+import com.example.app.ws.shared.dto.UserDto;
 import com.example.app.ws.ui.model.request.UserLoginRequestModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -33,19 +36,15 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException {
-		
+
 		try {
-			UserLoginRequestModel creds = new ObjectMapper()
-					.readValue(request.getInputStream(), UserLoginRequestModel.class);
-			
+			UserLoginRequestModel creds = new ObjectMapper().readValue(request.getInputStream(),
+					UserLoginRequestModel.class);
+
 			return this.authenticationManager.authenticate(
-					new UsernamePasswordAuthenticationToken(
-							creds.getEmail(), 
-							creds.getPassword(),
-							new ArrayList<>()));
-					
-			
-		}catch(IOException ioe) {
+					new UsernamePasswordAuthenticationToken(creds.getEmail(), creds.getPassword(), new ArrayList<>()));
+
+		} catch (IOException ioe) {
 			throw new RuntimeException(ioe);
 		}
 	}
@@ -53,18 +52,18 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
-		
+
 		String username = ((User) authResult.getPrincipal()).getUsername();
-		
-		String token = Jwts.builder()
-				.setSubject(username)
+ 
+		String token = Jwts.builder().setSubject(username)
 				.setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
-				.signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET)
-				.compact();
+				.signWith(SignatureAlgorithm.HS512, SecurityConstants.getTokenSecret()).compact();
+
+		UserService userService = (UserService) SpringApplicationContext.getBean("userServiceImpl");
+		UserDto userDto = userService.getUser(username);
 		
 		response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
+		response.addHeader("UserID", userDto.getUserId());
 	}
-	
-	
 
 }
