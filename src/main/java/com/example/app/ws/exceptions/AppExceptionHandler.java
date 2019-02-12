@@ -19,7 +19,7 @@ public class AppExceptionHandler {
 		
 		ErrorMessage errorMessage = new ErrorMessage(new Date(), ex.getMessage());
 		
-		return new ResponseEntity<Object>(errorMessage, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	@ExceptionHandler(value={UserAlreadyExistsException.class})
@@ -27,7 +27,7 @@ public class AppExceptionHandler {
 		
 		ErrorMessage errorMessage = new ErrorMessage(new Date(), ex.getMessage());
 		
-		return new ResponseEntity<Object>(errorMessage, new HttpHeaders(), HttpStatus.CONFLICT);
+		return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.CONFLICT);
 	}
 	
 	@ExceptionHandler(value={Exception.class})
@@ -35,7 +35,7 @@ public class AppExceptionHandler {
 		
 		ErrorMessage errorMessage = new ErrorMessage(new Date(), ex.getMessage());
 		
-		return new ResponseEntity<Object>(errorMessage, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	
