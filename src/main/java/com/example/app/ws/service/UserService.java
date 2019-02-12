@@ -1,14 +1,13 @@
 package com.example.app.ws.service;
 
-import java.util.List;
-
+import com.example.app.ws.shared.dto.UserDto;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import com.example.app.ws.io.entity.UserEntity;
-import com.example.app.ws.shared.dto.UserDto;
+import java.util.List;
 
 public interface UserService extends UserDetailsService{
-	
+
+	boolean verifyEmailToken(String token);
 	UserDto createUser(UserDto user);
 	List<UserDto> getAllUsers(int page, int limit);
 	UserDto getUser(String email);
