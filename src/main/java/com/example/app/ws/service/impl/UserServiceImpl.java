@@ -40,7 +40,6 @@ public class UserServiceImpl implements UserService {
         this.utils = utils;
     }
 
-    // dit is een verandering
     @Override
     public boolean verifyEmailToken(String token) {
         boolean returnValue = false;
