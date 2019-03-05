@@ -27,11 +27,11 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
-    BCryptPasswordEncoder bCryptPasswordEncoder;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
-    Utils utils;
+    private Utils utils;
 
     @Autowired
     UserServiceImpl(BCryptPasswordEncoder bCryptPasswordEncoder, UserRepository userRepository, Utils utils) {
@@ -40,13 +40,12 @@ public class UserServiceImpl implements UserService {
         this.utils = utils;
     }
 
-    // dit is een verandering
     @Override
     public boolean verifyEmailToken(String token) {
         boolean returnValue = false;
 
         UserEntity userEntity = this.userRepository.findUserByEmailVerificationToken(token)
-                .orElseThrow(() -> new RuntimeException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage()));
+                .orElseThrow(() -> new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage()));
 
         boolean hasTokenExpired = Utils.hasTokenExpired(token);
 
