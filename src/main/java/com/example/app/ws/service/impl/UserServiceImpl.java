@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
 
         if (!hasTokenExpired) {
             userEntity.setEmailVerificationStatus(Boolean.TRUE);
-            userEntity.setEmailVerificationToken(null);
+            userEntity.setEmailVerificationToken("Verified");
             this.userRepository.save(userEntity);
             returnValue = true;
         }

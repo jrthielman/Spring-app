@@ -28,12 +28,11 @@ public class Utils {
     }
 
     public static String generateEmailVerificationToken(String userId) {
-        String token = Jwts.builder()
+        return Jwts.builder()
                 .setSubject(userId)
                 .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.getTokenSecret())
                 .compact();
-        return token;
     }
 
     public String generateUserId(int length) {

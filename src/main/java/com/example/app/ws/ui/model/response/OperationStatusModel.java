@@ -3,7 +3,7 @@ package com.example.app.ws.ui.model.response;
 public class OperationStatusModel {
 
 	private String operationResult;
-	private String oprationName;
+	private String operationName;
 
 	public String getOperationResult() {
 		return operationResult;
@@ -13,12 +13,12 @@ public class OperationStatusModel {
 		this.operationResult = operationResult;
 	}
 
-	public String getOprationName() {
-		return oprationName;
+	public String getOperationName() {
+		return operationName;
 	}
 
-	public void setOprationName(String oprationName) {
-		this.oprationName = oprationName;
+	public void setOperationName(String oprationName) {
+		this.operationName = oprationName;
 	}
 
 }
