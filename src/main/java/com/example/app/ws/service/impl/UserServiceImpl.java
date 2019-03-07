@@ -5,6 +5,7 @@ import com.example.app.ws.exceptions.UserAlreadyExistsException;
 import com.example.app.ws.exceptions.UserServiceException;
 import com.example.app.ws.io.entity.UserEntity;
 import com.example.app.ws.service.UserService;
+import com.example.app.ws.shared.AmazonSES;
 import com.example.app.ws.shared.Utils;
 import com.example.app.ws.shared.dto.AddressDto;
 import com.example.app.ws.shared.dto.UserDto;
@@ -160,7 +161,11 @@ public class UserServiceImpl implements UserService {
 
         UserEntity storedUserDetails = this.userRepository.save(userEntity);
 
-        return modelMapper.map(storedUserDetails, UserDto.class);
+        UserDto returnValue = modelMapper.map(storedUserDetails, UserDto.class);
+
+        new AmazonSES().verifyEmail(returnValue);
+
+        return returnValue;
     }
 
     @Override
