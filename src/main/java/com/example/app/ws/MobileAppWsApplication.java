@@ -11,13 +11,14 @@ import com.example.app.ws.security.AppProperties;
 
 @SpringBootApplication
 public class MobileAppWsApplication extends SpringBootServletInitializer {
-	
+
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
 		
 		return super.configure(builder);
 	}
 
+	// comment
 	public static void main(String[] args) {
 		SpringApplication.run(MobileAppWsApplication.class, args);
 	}
