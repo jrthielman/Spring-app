@@ -12,7 +12,6 @@ import com.example.app.ws.security.AppProperties;
 @SpringBootApplication
 public class MobileAppWsApplication extends SpringBootServletInitializer {
 
-	// dit is een test Hallo
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
 		
